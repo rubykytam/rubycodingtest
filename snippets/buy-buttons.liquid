@@ -101,6 +101,11 @@
             </span>
             {%- render 'loading-spinner' -%}
           </button>
+     {% if product.selected_or_first_available_variant.inventory_quantity >4 %}
+              <p>Available!</p>
+              {% elsif product.selected_or_first_available_variant.inventory_quantity <= 4 %}
+  <p>Low stock</p>
+            {% endif %}
           {%- if show_dynamic_checkout -%}
             {{ form | payment_button }}
           {%- endif -%}
