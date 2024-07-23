@@ -121,19 +121,19 @@
 {%- endfor -%}
 <script>
   (function() {
-    // Generate the variants data from Liquid
+    // Link the Liquid to JS
     const variants = [
       {% for variant in product.variants %}
       {
         id: {{ variant.id }},
-        value: '{{ variant.title }}', // or use another attribute that matches your radio button values
+        value: '{{ variant.title }}',
         inventory_quantity: {{ variant.inventory_quantity }},
         metafields: {
           custom: {
             size: '{{ variant.metafields.custom.size }}'
           }
         }
-      }{% if forloop.last == false %},{% endif %}
+      }{% if forloop.last == false %},{% endif %} //comma for non-last object, formatting issues
       {% endfor %}
     ];
 
@@ -141,11 +141,12 @@
       const selectedValue = event.target.value;
       const selectedVariant = variants.find(variant => variant.value === selectedValue);
       const metafieldSize = selectedVariant ? selectedVariant.metafields.custom.size : 'Unknown Size';
-      const inventoryQuantity = selectedVariant ? selectedVariant.inventory_quantity : 0;
+      const inventoryQuantity = selectedVariant ? selectedVariant.inventory_quantity : 'Unknown Number';
       
       console.log('Clicked Radio Button:', selectedValue);
       console.log('Metafield Size:', metafieldSize);
 
+      // put into display area
       const displayArea = document.querySelector('#tasks');
       if (displayArea) {
         let inventoryMessage = '';
@@ -162,10 +163,10 @@
       }
     }
 
+    // Call the function when being clicked
     function attachRadioListeners() {
       const radioButtons = document.querySelectorAll('input[type="radio"]');
       radioButtons.forEach(function (radioButton) {
-        {% comment %} radioButton.removeEventListener('click', handleRadioButtonClick); {% endcomment %}
         radioButton.addEventListener('click', handleRadioButtonClick);
       });
     }
