@@ -76,6 +76,7 @@
       help_text: help_text,
       additional_props: input_dataset
     %}
+
   {%- elsif picker_type == 'button' -%}
     <input
       type="radio"
@@ -118,3 +119,58 @@
     </option>
   {%- endif -%}
 {%- endfor -%}
+<script>
+  (function() {
+    // Generate the variants data from Liquid
+    const variants = [
+      {% for variant in product.variants %}
+      {
+        id: {{ variant.id }},
+        value: '{{ variant.title }}', // or use another attribute that matches your radio button values
+        inventory_quantity: {{ variant.inventory_quantity }},
+        metafields: {
+          custom: {
+            size: '{{ variant.metafields.custom.size }}'
+          }
+        }
+      }{% if forloop.last == false %},{% endif %}
+      {% endfor %}
+    ];
+
+    function handleRadioButtonClick(event) {
+      const selectedValue = event.target.value;
+      const selectedVariant = variants.find(variant => variant.value === selectedValue);
+      const metafieldSize = selectedVariant ? selectedVariant.metafields.custom.size : 'Unknown Size';
+      const inventoryQuantity = selectedVariant ? selectedVariant.inventory_quantity : 0;
+      
+      console.log('Clicked Radio Button:', selectedValue);
+      console.log('Metafield Size:', metafieldSize);
+
+      const displayArea = document.querySelector('#tasks');
+      if (displayArea) {
+        let inventoryMessage = '';
+        if (inventoryQuantity > 4) {
+          inventoryMessage = ` Available!(${inventoryQuantity})`;
+        } else {
+          inventoryMessage = `Low stock(${inventoryQuantity})`;
+        }
+
+        displayArea.innerHTML = `
+          <p>${metafieldSize}</p>
+          <p>${inventoryMessage}</p>
+        `;
+      }
+    }
+
+    function attachRadioListeners() {
+      const radioButtons = document.querySelectorAll('input[type="radio"]');
+      radioButtons.forEach(function (radioButton) {
+        {% comment %} radioButton.removeEventListener('click', handleRadioButtonClick); {% endcomment %}
+        radioButton.addEventListener('click', handleRadioButtonClick);
+      });
+    }
+
+    // Call the function to attach the event listeners
+    attachRadioListeners();
+  })();
+</script>
