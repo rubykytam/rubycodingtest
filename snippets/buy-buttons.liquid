@@ -57,7 +57,7 @@
           value="{{ product.selected_or_first_available_variant.id }}"
           {% if product.selected_or_first_available_variant.available == false
             or quantity_rule_soldout
-            or product.selected_or_first_available_variant == nil
+            or product.selected_or_first_available_variant == null
           %}
             disabled
           {% endif %}
@@ -85,13 +85,13 @@
             class="product-form__submit button button--full-width {% if show_dynamic_checkout %}button--task-a-instock {% else %}button--primary{% endif %}"
             {% if product.selected_or_first_available_variant.available == false
               or quantity_rule_soldout
-              or product.selected_or_first_available_variant == nil
+              or product.selected_or_first_available_variant == null
             %}
               disabled
             {% endif %}
           >
             <span>
-              {%- if product.selected_or_first_available_variant == nil -%}
+              {%- if product.selected_or_first_available_variant == null -%}
                 {{ 'products.product.unavailable' | t }}
               {%- elsif product.selected_or_first_available_variant.available == false or quantity_rule_soldout -%}
                 {{ 'products.product.sold_out' | t }}
@@ -101,11 +101,14 @@
             </span>
             {%- render 'loading-spinner' -%}
           </button>
-     {% if product.selected_or_first_available_variant.inventory_quantity >4 %}
-              <p>Available!</p>
-              {% elsif product.selected_or_first_available_variant.inventory_quantity <= 4 %}
-  <p>Low stock</p>
+          <div id="tasks">
+            <p>{{ product.selected_or_first_available_variant.metafields.custom.size }}</p>
+            {% if product.selected_or_first_available_variant.inventory_quantity > 4 %}
+              <p>Available!({{ product.selected_or_first_available_variant.inventory_quantity }})</p>
+            {% elsif product.selected_or_first_available_variant.inventory_quantity <= 4 %}
+              <p>Low stock({{ product.selected_or_first_available_variant.inventory_quantity }})</p>
             {% endif %}
+          </div>
           {%- if show_dynamic_checkout -%}
             {{ form | payment_button }}
           {%- endif -%}
@@ -158,5 +161,8 @@
     </pickup-availability>
 
     <script src="{{ 'pickup-availability.js' | asset_url }}" defer="defer"></script>
+    <script>
+      console.log('JS in btn'); // Initial console log to verify script is running
+    </script>
   {%- endif -%}
 </div>
