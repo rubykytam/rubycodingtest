@@ -143,55 +143,60 @@
     function updateGreetingCardMessage() {
       const greetingCardChecked = document.querySelector('input[type="radio"][value="With Greeting Card"]:checked');
       const messageArea = document.querySelector('#message');
-      const messagesubmission = document.querySelector('#messageSubmission');
-      const presetMessage = messagesubmission ? messagesubmission.value : '';
-    
+      const messageSubmission = document.querySelector('#messageSubmission');
+      const presetMessage = messageSubmission ? messageSubmission.value : '';
+  
       if (greetingCardChecked) {
-        if (messageArea) {
-          messageArea.innerHTML = `
-            <label for="custom-word">Enter your greeting card's message:</label>
-            <textarea id="greeting-message">${presetMessage}</textarea>
-          `;
-          logMessageValue();
-        } else {
-          console.error('Element #message not found');
-        }
+          if (messageArea) {
+              messageArea.innerHTML = `
+                  <label for="custom-word">Enter your greeting card's message:</label>
+                  <textarea id="greeting-message">${presetMessage}</textarea>
+              `;
+              logMessageValue();
+          } else {
+              console.error('Element #message not found');
+          }
       } else {
-        if (messageArea) {
-          messageArea.innerHTML = ``;
-        } else {
-          console.error('Element #message not found');
-        }
+          if (messageArea) {
+              messageArea.innerHTML = ``;
+              if (messageSubmission) {
+                  messageSubmission.value = '';  // Ensure messageSubmission is set to empty
+              } else {
+                  console.error('Element #messageSubmission not found');
+              }
+          } else {
+              console.error('Element #message not found');
+          }
       }
-    }
-    
-    function logMessageValue() {
+  }
+  
+  function logMessageValue() {
       const message = document.querySelector('#greeting-message');
       if (message) {
-        message.addEventListener('change', handleMessageChange);
+          message.addEventListener('change', handleMessageChange);
       } else {
-        console.error('Element #greeting-message not found');
+          console.error('Element #greeting-message not found');
       }
-    }
-    
-    function handleMessageChange(event) {
+  }
+  
+  function handleMessageChange(event) {
       const messagePass = event.target.value;
       const messageSubmission = document.querySelector('#messageSubmission');
-    
+  
       if (messageSubmission) {
-        messageSubmission.value = messagePass;
+          messageSubmission.value = messagePass;
       } else {
-        console.error('Element #messageSubmission not found');
+          console.error('Element #messageSubmission not found');
       }
-    }
-    
-    function detectPresetValue() {
+  }
+  
+  function detectPresetValue() {
       const greetingCardChecked = document.querySelector('input[type="radio"][value="With Greeting Card"]:checked');
       if (greetingCardChecked) {
-        updateGreetingCardMessage();
+          updateGreetingCardMessage();
       }
-    }
-    
+  }
+  
     const radioButtonsMsg = document.querySelectorAll('input[type="radio"][name*="Greeting"]');
     radioButtonsMsg.forEach(radio => {
       radio.addEventListener('change', updateGreetingCardMessage);
