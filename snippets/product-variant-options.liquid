@@ -140,19 +140,70 @@
       {% endfor %}
     ];
     
+    function updateGreetingCardMessage() {
+      const greetingCardChecked = document.querySelector('input[type="radio"][value="With Greeting Card"]:checked');
+      const messageArea = document.querySelector('#message');
+      const messagesubmission = document.querySelector('#messageSubmission');
+      const presetMessage = messagesubmission ? messagesubmission.value : '';
+    
+      if (greetingCardChecked) {
+        if (messageArea) {
+          messageArea.innerHTML = `
+            <label for="custom-word">Enter your greeting card's message:</label>
+            <textarea id="greeting-message">${presetMessage}</textarea>
+          `;
+          logMessageValue();
+        } else {
+          console.error('Element #message not found');
+        }
+      } else {
+        if (messageArea) {
+          messageArea.innerHTML = ``;
+        } else {
+          console.error('Element #message not found');
+        }
+      }
+    }
+    
+    function logMessageValue() {
+      const message = document.querySelector('#greeting-message');
+      if (message) {
+        message.addEventListener('change', handleMessageChange);
+      } else {
+        console.error('Element #greeting-message not found');
+      }
+    }
+    
+    function handleMessageChange(event) {
+      const messagePass = event.target.value;
+      const messageSubmission = document.querySelector('#messageSubmission');
+    
+      if (messageSubmission) {
+        messageSubmission.value = messagePass;
+      } else {
+        console.error('Element #messageSubmission not found');
+      }
+    }
+    
+    function detectPresetValue() {
+      const greetingCardChecked = document.querySelector('input[type="radio"][value="With Greeting Card"]:checked');
+      if (greetingCardChecked) {
+        updateGreetingCardMessage();
+      }
+    }
+    
+    const radioButtonsMsg = document.querySelectorAll('input[type="radio"][name*="Greeting"]');
+    radioButtonsMsg.forEach(radio => {
+      radio.addEventListener('change', updateGreetingCardMessage);
+    });
+    
+    // Call the function to detect preset value on page load
+    document.addEventListener('DOMContentLoaded', (event) => {
+      detectPresetValue();
+    });
+    
 
     function handleRadioButtonClick(event) {
-      const greetingCardChecked = document.querySelector('input[type="radio"][value="With Greeting Card"]:checked');
-      const MessageArea = document.querySelector('#message');
-      MessageArea.innerHTML = "<p>set the text when clicked</p>";
-      if (greetingCardChecked) {
-        console.log("greeting card is checked");
-        MessageArea.innerHTML = "<p>set the text when selected</p>";
-      } else {
-        console.log("greeting card is not checked");
-        MessageArea.innerHTML = "<p>not text is setted</p>";
-      }
-
       
       const selectedRadios = document.querySelectorAll('input[type="radio"]:checked');
       let selectedValue = ''; 
@@ -164,9 +215,6 @@
       const metafieldSize = selectedVariant ? selectedVariant.metafields.custom.join(''): 'Unknown Size';
       const inventoryQuantity = selectedVariant ? selectedVariant.inventory_quantity : 'Unknown Number';
       
-      console.log('Clicked Radio Button:', selectedValue.slice(0, -3));
-      console.log(variants);
-      console.log('Metafield Size:', metafieldSize);
 
       // put into display area
       const displayArea = document.querySelector('#tasks');
@@ -191,15 +239,6 @@
       radioButtons.forEach(function (radioButton) {
         radioButton.addEventListener('click', handleRadioButtonClick);
       });
-    
-
 
   })();
 </script>
-
-{% comment %}
-  <div class="product-customization">
-    <label for="custom-word">Enter the word to be printed:</label>
-    <input type="text" id="custom-word" name="properties[Custom Word]" required>
-  </div>
-{% endcomment %}
