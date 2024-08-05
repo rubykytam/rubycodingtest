@@ -136,6 +136,14 @@
       }{% if forloop.last == false %},{% endif %} //comma for non-last object, formatting issues
       {% endfor %}
     ];
+    
+    //testing js code
+    console.log("testing...");
+    const testingradioButtons = document.querySelectorAll('input[type="radio"]');
+    console.log(testingradioButtons);
+    testingradioButtons.forEach((radioButton, index) => {
+      console.log(`Radio Button ${index + 1}:`, radioButton);
+    });
 
     function handleRadioButtonClick(event) {
       const selectedValue = event.target.value;
