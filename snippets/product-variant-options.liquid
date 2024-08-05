@@ -142,32 +142,17 @@
     
 
     function handleRadioButtonClick(event) {
+      const greetingCardChecked = document.querySelector('input[type="radio"][value="With Greeting Card"]:checked');
+      const MessageArea = document.querySelector('#message');
+      MessageArea.innerHTML = "<p>set the text when clicked</p>";
+      if (greetingCardChecked) {
+        console.log("greeting card is checked");
+        MessageArea.innerHTML = "<p>set the text when selected</p>";
+      } else {
+        console.log("greeting card is not checked");
+        MessageArea.innerHTML = "<p>not text is setted</p>";
+      }
 
-      const clickedButton = event.target;
-      if (clickedButton.value === "With Greeting Card") {
-        console.log('Button clicked: With Greeting Card');
-        const customWordInput = document.getElementById('custom-word');
-        if (!customWordInput) {
-          const customWordContainer = document.createElement('div');
-          customWordContainer.id = 'customWordContainer';
-  
-          const label = document.createElement('label');
-          label.setAttribute('for', 'custom-word');
-          label.textContent = 'Enter the word to be printed:';
-  
-          const input = document.createElement('input');
-          input.type = 'text';
-          input.id = 'custom-word';
-          input.name = 'properties[Custom Word]';
-          input.required = true;
-  
-          customWordContainer.appendChild(label);
-          customWordContainer.appendChild(input);
-  
-          // Insert the custom word container after the "With Greeting Card" radio button
-          clickedButton.parentNode.appendChild(customWordContainer);
-        }
-      } 
       
       const selectedRadios = document.querySelectorAll('input[type="radio"]:checked');
       let selectedValue = ''; 
@@ -201,15 +186,14 @@
     }
 
     // Call the function when being clicked
-    function attachRadioListeners() {
+
       const radioButtons = document.querySelectorAll('input[type="radio"]');
       radioButtons.forEach(function (radioButton) {
         radioButton.addEventListener('click', handleRadioButtonClick);
       });
-    }
+    
 
-    // Call the function to attach the event listeners
-    attachRadioListeners();
+
   })();
 </script>
 
