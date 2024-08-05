@@ -102,8 +102,10 @@
             {%- render 'loading-spinner' -%}
           </button>
           <div id="tasks">
-            <p>{{ product.selected_or_first_available_variant.metafields.custom.size }}</p>
-            <p>{{ product.selected_or_first_available_variant.metafields.custom.without_gift_card }}</p>
+            {% assign metafields = product.selected_or_first_available_variant.metafields.custom %}
+            {% for item in metafields %}
+              <p>{{ item[1] }}</p>
+            {% endfor %}
             {% if product.selected_or_first_available_variant.inventory_quantity > 4 %}
               <p>Available!({{ product.selected_or_first_available_variant.inventory_quantity }})</p>
             {% elsif product.selected_or_first_available_variant.inventory_quantity <= 4 %}

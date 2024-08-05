@@ -138,13 +138,6 @@
       {% endfor %}
     ];
     
-    //testing js code
-    {% comment %} console.log("testing...");
-    const testingradioButtons = document.querySelectorAll('input[name^="Size"]');
-    console.log(testingradioButtons);
-    testingradioButtons.forEach((radioButton, index) => {
-      console.log(`Radio Button ${index + 1}:`, radioButton);
-    }); {% endcomment %}
 
     function handleRadioButtonClick(event) {
       const selectedRadios = document.querySelectorAll('input[type="radio"]:checked');
@@ -155,7 +148,7 @@
       
       const selectedVariant = variants.find(variant => variant.value === selectedValue.slice(0, -3));
       const metafieldSize = selectedVariant ? selectedVariant.metafields.custom.size : 'Unknown Size';
-      const metafieldCard = selectedVariant ? selectedVariant.metafields.custom.card: 'Unknown Size';
+      const metafieldCard = selectedVariant ? selectedVariant.metafields.custom.card: 'Unknown Card';
       const inventoryQuantity = selectedVariant ? selectedVariant.inventory_quantity : 'Unknown Number';
       
       console.log('Clicked Radio Button:', selectedValue.slice(0, -3));
