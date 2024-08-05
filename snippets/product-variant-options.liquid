@@ -129,22 +129,92 @@
         value: '{{ variant.title }}',
         inventory_quantity: {{ variant.inventory_quantity }},
         metafields: {
-          custom: {
-            size: '{{ variant.metafields.custom.size }}'
-          }
+          custom: [
+            {% assign metafields = variant.metafields.custom %}
+            {% for item in metafields %}
+              "{{ item[1] }}"{% if forloop.last == false %},{% endif %}
+            {% endfor %}
+          ]
         }
       }{% if forloop.last == false %},{% endif %} //comma for non-last object, formatting issues
       {% endfor %}
     ];
+    
+    function updateGreetingCardMessage() {
+      const greetingCardChecked = document.querySelector('input[type="radio"][value="With Greeting Card"]:checked');
+      const messageArea = document.querySelector('#message');
+      const messagesubmission = document.querySelector('#messageSubmission');
+      const presetMessage = messagesubmission ? messagesubmission.value : '';
+    
+      if (greetingCardChecked) {
+        if (messageArea) {
+          messageArea.innerHTML = `
+            <label for="custom-word">Enter your greeting card's message:</label>
+            <textarea id="greeting-message">${presetMessage}</textarea>
+          `;
+          logMessageValue();
+        } else {
+          console.error('Element #message not found');
+        }
+      } else {
+        if (messageArea) {
+          messageArea.innerHTML = ``;
+        } else {
+          console.error('Element #message not found');
+        }
+      }
+    }
+    
+    function logMessageValue() {
+      const message = document.querySelector('#greeting-message');
+      if (message) {
+        message.addEventListener('change', handleMessageChange);
+      } else {
+        console.error('Element #greeting-message not found');
+      }
+    }
+    
+    function handleMessageChange(event) {
+      const messagePass = event.target.value;
+      const messageSubmission = document.querySelector('#messageSubmission');
+    
+      if (messageSubmission) {
+        messageSubmission.value = messagePass;
+      } else {
+        console.error('Element #messageSubmission not found');
+      }
+    }
+    
+    function detectPresetValue() {
+      const greetingCardChecked = document.querySelector('input[type="radio"][value="With Greeting Card"]:checked');
+      if (greetingCardChecked) {
+        updateGreetingCardMessage();
+      }
+    }
+    
+    const radioButtonsMsg = document.querySelectorAll('input[type="radio"][name*="Greeting"]');
+    radioButtonsMsg.forEach(radio => {
+      radio.addEventListener('change', updateGreetingCardMessage);
+    });
+    
+    // Call the function to detect preset value on page load
+    document.addEventListener('DOMContentLoaded', (event) => {
+      detectPresetValue();
+    });
+    
 
     function handleRadioButtonClick(event) {
-      const selectedValue = event.target.value;
-      const selectedVariant = variants.find(variant => variant.value === selectedValue);
-      const metafieldSize = selectedVariant ? selectedVariant.metafields.custom.size : 'Unknown Size';
+      
+      const selectedRadios = document.querySelectorAll('input[type="radio"]:checked');
+      let selectedValue = ''; 
+      selectedRadios.forEach(radio => {
+        selectedValue+= radio.value + ' / ';
+      });
+      
+      const selectedVariant = variants.find(variant => variant.value === selectedValue.slice(0, -3));
+      const metafieldSize = selectedVariant ? selectedVariant.metafields.custom.join(''): 'Unknown Size';
       const inventoryQuantity = selectedVariant ? selectedVariant.inventory_quantity : 'Unknown Number';
       
-      console.log('Clicked Radio Button:', selectedValue);
-      console.log('Metafield Size:', metafieldSize);
 
       // put into display area
       const displayArea = document.querySelector('#tasks');
@@ -164,14 +234,11 @@
     }
 
     // Call the function when being clicked
-    function attachRadioListeners() {
+
       const radioButtons = document.querySelectorAll('input[type="radio"]');
       radioButtons.forEach(function (radioButton) {
         radioButton.addEventListener('click', handleRadioButtonClick);
       });
-    }
 
-    // Call the function to attach the event listeners
-    attachRadioListeners();
   })();
 </script>

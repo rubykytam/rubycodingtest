@@ -78,6 +78,7 @@
               assign quantity_rule_soldout = true
             endif
           -%}
+
           <button
             id="ProductSubmitButton-{{ section_id }}"
             type="submit"
@@ -102,13 +103,19 @@
             {%- render 'loading-spinner' -%}
           </button>
           <div id="tasks">
-            <p>{{ product.selected_or_first_available_variant.metafields.custom.size }}</p>
+            {% assign metafields = product.selected_or_first_available_variant.metafields.custom %}
+            {% for item in metafields %}
+              {{ item[1] }}
+            {% endfor %}
+            {% comment %} <span id="doubleCheck">abc</span> {% endcomment %}
             {% if product.selected_or_first_available_variant.inventory_quantity > 4 %}
               <p>Available!({{ product.selected_or_first_available_variant.inventory_quantity }})</p>
             {% elsif product.selected_or_first_available_variant.inventory_quantity <= 4 %}
               <p>Low stock({{ product.selected_or_first_available_variant.inventory_quantity }})</p>
             {% endif %}
           </div>
+          <input type="hidden" name="properties[messages]" id="messageSubmission">
+
           {%- if show_dynamic_checkout -%}
             {{ form | payment_button }}
           {%- endif -%}
