@@ -142,6 +142,33 @@
     
 
     function handleRadioButtonClick(event) {
+
+      const clickedButton = event.target;
+      if (clickedButton.value === "With Greeting Card") {
+        console.log('Button clicked: With Greeting Card');
+        const customWordInput = document.getElementById('custom-word');
+        if (!customWordInput) {
+          const customWordContainer = document.createElement('div');
+          customWordContainer.id = 'customWordContainer';
+  
+          const label = document.createElement('label');
+          label.setAttribute('for', 'custom-word');
+          label.textContent = 'Enter the word to be printed:';
+  
+          const input = document.createElement('input');
+          input.type = 'text';
+          input.id = 'custom-word';
+          input.name = 'properties[Custom Word]';
+          input.required = true;
+  
+          customWordContainer.appendChild(label);
+          customWordContainer.appendChild(input);
+  
+          // Insert the custom word container after the "With Greeting Card" radio button
+          clickedButton.parentNode.appendChild(customWordContainer);
+        }
+      } 
+      
       const selectedRadios = document.querySelectorAll('input[type="radio"]:checked');
       let selectedValue = ''; 
       selectedRadios.forEach(radio => {
@@ -185,3 +212,10 @@
     attachRadioListeners();
   })();
 </script>
+
+{% comment %}
+  <div class="product-customization">
+    <label for="custom-word">Enter the word to be printed:</label>
+    <input type="text" id="custom-word" name="properties[Custom Word]" required>
+  </div>
+{% endcomment %}
