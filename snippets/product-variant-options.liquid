@@ -130,7 +130,8 @@
         inventory_quantity: {{ variant.inventory_quantity }},
         metafields: {
           custom: {
-            size: '{{ variant.metafields.custom.size }}'
+            size: '{{ variant.metafields.custom.size }}',
+            card: '{{ variant.metafields.custom.without_gift_card }}'
           }
         }
       }{% if forloop.last == false %},{% endif %} //comma for non-last object, formatting issues
@@ -138,20 +139,27 @@
     ];
     
     //testing js code
-    console.log("testing...");
-    const testingradioButtons = document.querySelectorAll('input[type="radio"]');
+    {% comment %} console.log("testing...");
+    const testingradioButtons = document.querySelectorAll('input[name^="Size"]');
     console.log(testingradioButtons);
     testingradioButtons.forEach((radioButton, index) => {
       console.log(`Radio Button ${index + 1}:`, radioButton);
-    });
+    }); {% endcomment %}
 
     function handleRadioButtonClick(event) {
-      const selectedValue = event.target.value;
-      const selectedVariant = variants.find(variant => variant.value === selectedValue);
+      const selectedRadios = document.querySelectorAll('input[type="radio"]:checked');
+      let selectedValue = ''; 
+      selectedRadios.forEach(radio => {
+        selectedValue+= radio.value + ' / ';
+      });
+      
+      const selectedVariant = variants.find(variant => variant.value === selectedValue.slice(0, -3));
       const metafieldSize = selectedVariant ? selectedVariant.metafields.custom.size : 'Unknown Size';
+      const metafieldCard = selectedVariant ? selectedVariant.metafields.custom.card: 'Unknown Size';
       const inventoryQuantity = selectedVariant ? selectedVariant.inventory_quantity : 'Unknown Number';
       
-      console.log('Clicked Radio Button:', selectedValue);
+      console.log('Clicked Radio Button:', selectedValue.slice(0, -3));
+      console.log(variants);
       console.log('Metafield Size:', metafieldSize);
 
       // put into display area
@@ -166,6 +174,7 @@
 
         displayArea.innerHTML = `
           <p>${metafieldSize}</p>
+          <p>${metafieldCard}</p>
           <p>${inventoryMessage}</p>
         `;
       }
